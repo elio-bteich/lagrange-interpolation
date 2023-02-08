@@ -1,1 +1,6 @@
 # interpolation
+
+## Compiling
+bash```
+make
+```
