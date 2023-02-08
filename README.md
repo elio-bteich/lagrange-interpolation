@@ -1,6 +1,6 @@
 # interpolation
 
 ## Compiling
-bash```
+```
 make
 ```
