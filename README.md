@@ -1,4 +1,4 @@
-# interpolation
+# Lagrange Interpolation
 
 ## Compiling
 ```bash
