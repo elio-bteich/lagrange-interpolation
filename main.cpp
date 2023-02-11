@@ -63,9 +63,7 @@ int main(int argc, char** argv){
     cout << " max absolute error : " << maxAbsError << endl;
     
     plot(x_errors, errorAbs, ERROR_X_NB, "Absolute approximation error for f1(x) with Lagrange", "testPlotFuncAbsError");
-
-    
-
+      
     free(tab_x);    //Style C pour désallocation, à la place de delete[] en C++
     free(tab_y);
     free(errorRel);

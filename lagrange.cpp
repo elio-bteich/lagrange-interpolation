@@ -1,9 +1,6 @@
 #include "lagrange.hpp"
 #include "util.hpp"
 
-#define BOUND_A 0.0
-#define BOUND_B 1.0
-
 /**
  *
  * @param a borne gauche de l'intervalle
