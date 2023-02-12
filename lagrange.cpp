@@ -29,7 +29,6 @@ double *xvals(double a, double b, uint64_t n)
         {
             tab_x[k] = std::numeric_limits<double>::min();
         }
-        std::cout << tab_x[k] << std::endl;
     }
 
     return tab_x;
