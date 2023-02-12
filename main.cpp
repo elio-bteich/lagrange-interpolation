@@ -4,13 +4,14 @@
 #include <cstdint>
 #include <stdint.h>
 #include <math.h>
+#include <string>
+#include <iomanip>
 
-//#include "matrix.hpp"
 #include "util.hpp"
 #include "lagrange.hpp"
 
 #define BOUND_A 0.0
-#define BOUND_B 2.0
+#define BOUND_B 1.0
 
 using namespace std;
 
@@ -28,43 +29,71 @@ double f1(double x)
     return x / sqrt(x);
 }
 
-int main(int argc, char** argv){
+int main(int argc, char **argv)
+{
 
-    const uint64_t INTERPOLATION_X_NB = 10; // nombre de points d'interpolation
-    const uint64_t ERROR_X_NB = 1000000; // nombre de points pour lesquels on veut tester l'erreur
+    const uint64_t INTERPOLATION_X_NB = 100; // nombre de points d'interpolation
+    const uint64_t X_NB = 10000;          // nombre de points d'echantillonage de la courbe
 
-
-    double *tab_x = xvals(BOUND_A, BOUND_B, INTERPOLATION_X_NB-1);
+    double *tab_x = xvals(BOUND_A, BOUND_B, INTERPOLATION_X_NB - 1);
 
     double *tab_y = yvals(&f1, tab_x, INTERPOLATION_X_NB);
 
-    std::cout << "Lagrange de x/sqrt(x) en x=0.55 est " << approx_lagrange(tab_x, tab_y, INTERPOLATION_X_NB, 0.55) << std::endl;
+    cout << setprecision(16) << "Lagrange de x/sqrt(x) en x=0.55 est " << approx_lagrange(tab_x, tab_y, INTERPOLATION_X_NB, 0.55) << endl;
 
-    double *x_errors = new double[ERROR_X_NB];
+    cout << "f(0.55) = " << f1(0.55) << endl;
 
-    double distAB = fabs(BOUND_B - BOUND_A);    
+    double *x_echant = new double[X_NB];
 
-    for(int i = 0; i < ERROR_X_NB; i++){
-        x_errors[i] = BOUND_A + i*distAB/ERROR_X_NB;
+    double distAB = fabs(BOUND_B - BOUND_A);
+
+    for (int i = 0; i < X_NB; i++)
+    {
+        x_echant[i] = BOUND_A + i * distAB / X_NB;
     }
-   
-    double* errorRel = (double*)calloc(ERROR_X_NB, sizeof(double));
 
-    estimateRelError(errorRel, tab_x, tab_y, INTERPOLATION_X_NB, &f1, BOUND_A, BOUND_B, ERROR_X_NB);
+    //double *y_echant = yvals(&f1, x_echant, X_NB);
+    double *y_echant = new double[X_NB];
+    for (int i = 0; i < X_NB; i++) {
+        y_echant[i] = approx_lagrange(tab_x, tab_y, INTERPOLATION_X_NB, x_echant[i]);
+    }
 
-    double maxRelError = getMax(errorRel, ERROR_X_NB);
+    double *y_func = yvals(&f1, x_echant, X_NB);
+
+    plot(x_echant, y_func, X_NB, "courbe de x/sqrt(x)", "plotFunc");
+
+    string string_description = "approx de Lagrange pour x/sqrt(x) avec n=" + to_string(INTERPOLATION_X_NB);
+
+    const char* char_description = string_description.c_str();
+
+
+    plot(x_echant, y_echant, X_NB, const_cast<char*>(char_description), "plotInterpolation");
+
+    double *errorRel = (double *)calloc(X_NB, sizeof(double));
+
+    estimateRelError(errorRel, tab_x, tab_y, INTERPOLATION_X_NB, &f1, BOUND_A, BOUND_B, X_NB);
+
+    double maxRelError = getMax(errorRel, X_NB);
     cout << " max relative error : " << maxRelError << endl;
 
-    plot(x_errors, errorRel, ERROR_X_NB, "Relative approximation error for f1(x) with Lagrange", "testPlotFuncRelError");
+    string_description = "Erreur relative de l'approx de Lagrange pour x/sqrt(x) avec n=" + to_string(INTERPOLATION_X_NB);
 
-    double* errorAbs = (double*)calloc(ERROR_X_NB, sizeof(double));
-    estimateAbsError(errorAbs, tab_x, tab_y, INTERPOLATION_X_NB, &f1, BOUND_A, BOUND_B, ERROR_X_NB);
-    double maxAbsError = getMax(errorAbs, ERROR_X_NB);
+    char_description = string_description.c_str();
+
+    plot(x_echant, errorRel, X_NB, const_cast<char*>(char_description), "plotRelError");
+
+    double *errorAbs = (double *)calloc(X_NB, sizeof(double));
+    estimateAbsError(errorAbs, tab_x, tab_y, INTERPOLATION_X_NB, &f1, BOUND_A, BOUND_B, X_NB);
+    double maxAbsError = getMax(errorAbs, X_NB);
     cout << " max absolute error : " << maxAbsError << endl;
-    
-    plot(x_errors, errorAbs, ERROR_X_NB, "Absolute approximation error for f1(x) with Lagrange", "testPlotFuncAbsError");
-      
-    free(tab_x);    //Style C pour désallocation, à la place de delete[] en C++
+
+    string_description = "Erreur absolue de l'approx de Lagrange pour x/sqrt(x) avec n=" + to_string(INTERPOLATION_X_NB);
+
+    char_description = string_description.c_str();
+
+    plot(x_echant, errorAbs, X_NB, const_cast<char*>(char_description), "plotAbsError");
+
+    free(tab_x); // Style C pour désallocation, à la place de delete[] en C++
     free(tab_y);
     free(errorRel);
     free(errorAbs);

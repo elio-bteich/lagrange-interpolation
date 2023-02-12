@@ -1,7 +1,6 @@
 .vscode
 *.o
 *.out
-*.pdf
 *.eps
-testPlotFuncAbsError
-testPlotFuncRelError
+plot*
+*.eps

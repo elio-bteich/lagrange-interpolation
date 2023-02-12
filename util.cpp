@@ -73,7 +73,7 @@ Inputs : an array of points along x-axis, an array of points along y-axis, the n
 void plot(double *xvals, double *yvals, uint64_t N, char *title, char *filename)
 {
     char gnuplot_command1[1000] = {0};
-    sprintf(gnuplot_command1, "set terminal postscript eps enhanced color solid colortext 9 font \",15\" \n  set output '%s.eps' \n set key left below \n set style data line \n plot \"%s\" title \"%s\" \n", filename, filename, title);
+    sprintf(gnuplot_command1, "set terminal postscript eps enhanced color solid colortext 9 font \",15\" \n  set output '%s.eps' \n set yrange [0:1] \n set key left below \n set style data line \n set xlabel textcolor lt 1 offset character 0, character -3, 0 font \",15\" \n plot \"%s\" title \"%s\"\n", filename, filename, title);
 
     FILE *temp = fopen(filename, "w");
 

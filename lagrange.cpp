@@ -2,6 +2,10 @@
 #include "util.hpp"
 
 /**
+ * 
+ * Role: décompose un intervalle [A,B] en n sous-intervale
+ * 
+ * Préconditions: a <= b et n >= 0
  *
  * @param a borne gauche de l'intervalle
  * @param b borne droite de l'intervalle
@@ -9,7 +13,7 @@
  *
  * @returns tableau des n+1 x equidistants entre a et b
  *
- * si un point d'interpollation est égale à 0 on le décale un peu
+ * NB: si un point d'interpollation est égale à 0 on le décale un peu
  * vers la droite pour éviter les divisions par 0
  *
  */
@@ -25,13 +29,18 @@ double *xvals(double a, double b, uint64_t n)
         {
             tab_x[k] = std::numeric_limits<double>::min();
         }
+        std::cout << tab_x[k] << std::endl;
     }
 
     return tab_x;
 }
 
 /**
- *
+ * 
+ * Role: construit un tableau d'images des points de tab_x par la fonction f
+ * 
+ * Préconditions: n >= 0
+ * 
  * @param f pointeur vers une fonction qui prend en paramètre un double et retourne un double
  * @param tab_x tableau des points d'interpolations
  * @param n taille du tableau des points d'interpolations
@@ -52,6 +61,10 @@ double *yvals(double (*f)(double), double *tab_x, uint64_t n)
 }
 
 /**
+ * 
+ * Role: Evalue le polynome de base de lagrange d'indice i au point x
+ * 
+ * Préconditions: 0 <= i < n 
  *
  * @param tab_x tableau des x des points d'interpolations
  * @param n taille du tableau tab_x
@@ -59,8 +72,6 @@ double *yvals(double (*f)(double), double *tab_x, uint64_t n)
  * @param x point pour lequel on veut évaluer le polynome de base
  *
  * @returns l'image du polynome de base de lagrange d'indice i au point x
- *
- * Evalue le polynome de base de lagrange d'indice i au point x
  *
  */
 double base_lagrange(double *tab_x, int n, int i, double x)
@@ -79,15 +90,17 @@ double base_lagrange(double *tab_x, int n, int i, double x)
 }
 
 /**
+ * 
+ * Role: Evalue le polynome de lagrange au point x
+ * 
+ * Préconditions: n > 0, tab_x et tab_y ont la même taille
  *
  * @param tab_x tableau des x des points d'interpolations
  * @param tab_y tableau des images des points d'interpolations
- * @param n taille du tableau tab_x
+ * @param n taille du tableau tab_x et tab_y
  * @param x point pour lequel on veur évaluer le polynome de lagrange
  *
  * @returns l'image du polynome de lagrange au point x
- *
- * Evalue le polynome de lagrange au point x
  *
  */
 double approx_lagrange(double *tab_x, double *tab_y, uint64_t n, double x)
