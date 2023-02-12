@@ -4,11 +4,11 @@ This project is a part of the course "Digital Creation" at Université de Nantes
 
 ## Installing Dependencies
 
-### Mac
+#### Mac
 ```
 brew install gnuplot
 ```
-### Linux
+#### Linux
 ```
 sudo apt-get install gnuplot
 ```
